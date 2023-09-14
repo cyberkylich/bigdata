@@ -1,27 +1,26 @@
-def check(names):
-    k = 0
-    nick = input()
-    new_nick = ""
+def check(names, new_nick):
+    nick = str(input())
     if nick in names:
-        k += 1
-        # nick.append(k)
-        new_nick = nick + k
-        names[new_nick] += k
-        print(new_nick)
+        names[nick] += 1
+        nick += str(names[nick])
+        new_nick.append(nick)
     else:
-        k = 0
-        names[nick] = k
-        print("OK")
-    print(names.items())
-    return
+        names[nick] = 0
+        new_nick.append("OK")
+    return (new_nick)
 
 
 def main():
     names = {}
+    new_nick = []
     n = input()
     for i in range(int(n)):
-        check(names)
+        check(names, new_nick)
+
+    for name in new_nick:
+        print(name)
+
     return
 
-    if __name__ == "__main__":
+if __name__ == "__main__":
         main()
