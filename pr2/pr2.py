@@ -11,8 +11,19 @@ def bar_grapf(df):
     # plt.xlabel("Рейтинг")
     # plt.ylabel("Подписчики")
     # plt.show()
+    f = [i for i in df['subscribers']]
+    print(f)
     fig = go.Figure()
-    fig.add_bar(x = df['rank'], y = df['subscribers'])
+    fig.add_bar(x = df['rank'], y = df['subscribers'], marker=dict(color=f, coloraxis="coloraxis", colorscale='Inferno',
+                line=dict(color='black', width=2)))
+    fig.update_layout(title={'text' : "Best youtubers statistic",
+                             'y': 0.9,
+                             'x': 0.5,
+                             'xanchor': 'center',
+                             'yanchor': 'top'},
+                      title_font_size=20,
+                      xaxis_title="rank youtuber",
+                      yaxis_title="subscribers")
     fig.show()
     return
 
