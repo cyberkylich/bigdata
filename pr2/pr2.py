@@ -1,17 +1,17 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.graph_objs as go
-import plotly.express as px
 from sklearn.datasets import load_digits
 from sklearn.manifold import TSNE
 import umap
+import time
 
 
 def bar_grapf(df):
     fig = go.Figure()
     fig.add_bar(x=[j for j in range(len(df))], y=df['subscribers'],
                 marker=dict(color=[i for i in df['subscribers']],
-                            colorscale='Inferno',
+                            colorscale='Inferno', coloraxis="coloraxis",
                             line=dict(color='black', width=2)))
     fig.update_layout(title={'text': "Best youtubers statistic",
                              'y': 0.9,
@@ -30,9 +30,7 @@ def bar_grapf(df):
 
 def circle_grapf(df):
     fig = go.Figure()
-    low = 0
-    mid = 0
-    high = 0
+    low, mid, high = 0, 0, 0
     new_arr = []
     labels = ['subscribers < 35kk', 'subscribers < 80kk', 'subscribers > 80kk']
     for items in df["subscribers"]:
@@ -45,7 +43,6 @@ def circle_grapf(df):
     new_arr.append(low)
     new_arr.append(mid)
     new_arr.append(high)
-
     fig.add_trace(go.Pie(values=new_arr, labels=labels, marker_line_width=2))
     fig.show()
     return
@@ -73,29 +70,25 @@ def line_grapf(df):
 
 
 def tsne_grapf():
+    start = time.time()
     X, y = load_digits(return_X_y=True)
-    # digits = load_digits()
-    # fig, axs = plt.subplots(2, 5, sharey=False, tight_layout=True, figsize=(12, 6), facecolor='white')
-    # n = 0
-    # plt.gray()
-    # for i in range(0, 2):
-    #     for j in range(0, 5):
-    #         axs[i, j].matshow(digits.images[n])
-    #         axs[i, j].set(title=y[n])
-    #         n = n + 1
-    # plt.show()
-    embed = TSNE(n_components=2, perplexity=10, random_state = 123)
+    embed = TSNE(n_components=2, perplexity=30, random_state=123)
     X_embedded = embed.fit_transform(X)
+    end = time.time()
     plt.scatter(X_embedded[:, 0], X_embedded[:, 1], c=y, s=0.5)
+    print("Время выполнения функции: ", end - start, "секунд")
     plt.show()
     return
 
 
 def umap_grapf():
+    start = time.time()
     X, y = load_digits(return_X_y=True)
-    manifold = umap.UMAP(n_neighbors=50, min_dist=0.6, random_state=123).fit(X, y)
+    manifold = umap.UMAP(n_neighbors=25, min_dist=0.3, random_state=123).fit(X, y)
     X_reduced = manifold.transform(X)
+    end = time.time()
     plt.scatter(X_reduced[:, 0], X_reduced[:, 1], c=y, s=0.5)
+    print("Время выполнения функции: ", end - start, "секунд")
     plt.show()
     return
 
