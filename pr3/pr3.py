@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats as sts
-
+import seaborn as sns
 
 def bar_grapf(df):
     fig, ax = plt.subplots(1, 4, figsize=(15, 4))
@@ -106,13 +106,28 @@ def theorem(df):
     return
 
 
+def normal_distribution(df):
+    normal_quantiles = np.random.normal(0, 1, 1338)
+    x = np.sort(normal_quantiles)
+    y_bmi = np.sort(df['bmi'])
+    y_charges = np.sort(df['charges'])
+    sns.jointplot(x=x, y=y_bmi, kind="reg", truncate=True, color="blue")
+    sns.jointplot(x=x, y=y_charges, kind="reg", truncate=True, color="purple")
+    test_bmi = (df['bmi'] - np.mean(df['bmi']))/df['bmi'].std()
+    test_charges = (df['charges'] - np.mean(df['charges'])) / df['charges'].std()
+    print("KS-тест для bmi: ", sts.kstest(test_bmi, 'norm'))
+    print("KS-тест для charges: ", sts.kstest(test_charges, 'norm'))
+    plt.show()
+    return
+
+
 def main():
     df = pd.read_csv("insurance.csv")
     print(df.info())
     # bar_grapf(df)
     # box_plot(df)
-    theorem(df)
-
+    # theorem(df)
+    normal_distribution(df)
     return
 
 
