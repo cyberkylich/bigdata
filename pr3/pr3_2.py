@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import scipy.stats as sts
 
+
 def missing_val(df):
     for column in df.columns:
         missing = np.mean(df[column].isna() * 100)
@@ -25,7 +26,7 @@ def deaths(df):
     for i in df.values:
         if i[5] > 3000:
             a += 1
-            print(f"Страна: {i[6]}, дата: {i[0]}, кол-во смертей: {i[5]}" )
+            print(f"Страна: {i[6]}, дата: {i[0]}, кол-во смертей: {i[5]}")
     print("Количество дней ", a)
     return
 
