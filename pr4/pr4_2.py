@@ -1,33 +1,35 @@
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
-import sklearn.metrics as sm
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
 
 
-def regression(df):
-    x = df['TV']
-    y = df['sales']
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
-    sum_xy = 0
-    sum_xx = 0
-    for i in range(x.count()):
-        sum_xy += x[i]*y[i]
-        sum_xx += x[i]**2
-    ss_xy = sum_xy - x.count()*x_mean*y_mean
-    ss_xx = sum_xx - x.count()*(x_mean**2)
-    b1 = ss_xy / ss_xx
-    b0 = y_mean - b1*x_mean
-    f = [b0 + b1 * x for x in x]
-    tt = 0
-    for i in range(y.count()):
-        tt += (y[i] - f[i])**2
-    mse = tt / x.count()
-    print("Коэффициент сдвига = ", b0)
-    print("Угол наклона = ", b1)
-    print("MSE = ", mse)
+def regression(df, epochs, learning_rate):
+    x = np.array(df[['TV']])
+    y = np.array(df['sales'])
+    b0, b1 = 0, 0
+    for i in range(epochs):
+        f = b1 * x[:, 0] + b0
+        gr_b1 = 2/len(x) * np.sum((y - f) * (-x[:, 0]))
+        gr_b0 = 2/len(x) * np.sum(y - f) * (-1)
+        b1 = b1 - learning_rate * gr_b1
+        b0 = b0 - learning_rate * gr_b0
+        mse = np.sum((y - f)**2)/len(x)
+        print(f"Итерация : {i + 1}")
+        print(f"Наклон {b1}| Сдвиг {b0}")
+        print(f"MSE {mse}")
+    #sklearn
+    model = LinearRegression()
+    model.fit(x, y)
+    model_a = model.coef_[0]
+    model_b = model.intercept_
+    model_pred = model_a * x + model_b
+
     plt.scatter(x, y, marker='o', color="red")
-    plt.plot(x, f)
+    plt.plot(x, model_pred, linewidth=2, color='black', label=f'Модель sklearn = {model_a:.2f}x + {model_b:.2f}')
+    plt.plot(x, f, '--g', linewidth=2, label=f'Вручную = {b1}x + {b0}')
+    plt.grid(True)
+    plt.legend()
     plt.show()
     return
 
@@ -36,8 +38,7 @@ def main():
     df = pd.read_csv("Advertising.csv")
     print(df.info())
     print(df.corr())
-    regression(df)
-
+    regression(df, 100000, 0.0000339)
     return
 
 
