@@ -10,15 +10,15 @@ def regression(df, epochs, learning_rate):
     b0, b1 = 0, 0
     for i in range(epochs):
         f = b1 * x[:, 0] + b0
-        gr_b1 = 2/len(x) * np.sum((y - f) * (-x[:, 0]))
-        gr_b0 = 2/len(x) * np.sum(y - f) * (-1)
+        gr_b1 = 2 / len(x) * np.sum((y - f) * (-x[:, 0]))
+        gr_b0 = 2 / len(x) * np.sum(y - f) * (-1)
         b1 = b1 - learning_rate * gr_b1
         b0 = b0 - learning_rate * gr_b0
-        mse = np.sum((y - f)**2)/len(x)
+        mse = np.sum((y - f) ** 2) / len(x)
         print(f"Итерация : {i + 1}")
         print(f"Наклон {b1}| Сдвиг {b0}")
         print(f"MSE {mse}")
-    #sklearn
+    # sklearn
     model = LinearRegression()
     model.fit(x, y)
     model_a = model.coef_[0]
